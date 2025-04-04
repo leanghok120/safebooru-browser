@@ -15,15 +15,27 @@ export function ImageGrid({ initialQuery, initialImages }: ImageGridProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const observerTarget = useRef<HTMLDivElement>(null);
+  const currentQuery = useRef(initialQuery);
+
+  // Reset state when query changes
+  useEffect(() => {
+    if (currentQuery.current !== initialQuery) {
+      setImages(initialImages);
+      setPage(1);
+      setHasMore(true);
+      currentQuery.current = initialQuery;
+    }
+  }, [initialQuery, initialImages]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       async (entries) => {
         if (entries[0].isIntersecting && !isLoading && hasMore) {
           setIsLoading(true);
-          const nextPage = page + 1;
           try {
+            const nextPage = page + 1;
             const newImages = await searchImages(initialQuery, nextPage);
+
             if (newImages.length === 0) {
               setHasMore(false);
             } else {
@@ -48,7 +60,7 @@ export function ImageGrid({ initialQuery, initialImages }: ImageGridProps) {
   }, [page, isLoading, hasMore, initialQuery]);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {images.map((image, index) => (
         <ImageCard
           key={`${image.file_url}-${index}`}
