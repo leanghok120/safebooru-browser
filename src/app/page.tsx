@@ -1,4 +1,3 @@
-import { Metadata } from "next";
 import { Suspense } from "react";
 import { searchImages } from "@/services/safebooru";
 import { ImageGrid } from "@/components/ImageGrid";
@@ -7,11 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Search } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "SafeBooru Browser",
-  description: "Browse SafeBooru images safely through a proxy",
-};
 
 interface SearchParams {
   query?: string;
